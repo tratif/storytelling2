@@ -1,9 +1,8 @@
 package com.tratif.storytelling;
 
+public enum RevisionStatus {
 
-public enum DocumentStatus {
-
-    NEW,
+	DRAFT,
     SUBMITED,
     REJECTED,
     ACCEPTED
