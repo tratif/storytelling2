@@ -21,6 +21,12 @@ public class DocumentAssert extends AbstractAssert<DocumentAssert, Document> {
 		return this;
 	}
 
+	public DocumentAssert hasStatus(RevisionStatus status) {
+		isNotNull();
+		Assertions.assertThat(actual.getLastRevision().getStatus()).isEqualTo(status);
+		return this;
+	}
+
 	public static DocumentAssert assertThat(Document doc) {
 		return new DocumentAssert(doc);
 	}
