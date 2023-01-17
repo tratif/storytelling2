@@ -14,12 +14,13 @@ public class DocumentTest {
 
 	Person author = new Person("Homer Simpson");
 	Person editor = new Person("Bart Simpson");
+	Person editor2 = new Person("Marge Simpson");
 	Person sbElse = new Person("Peter Griffin");
 
 	Document submitedDocument = document()
 			.withStatus(SUBMITED)
 			.authoredBy(author)
-			.withEditor(editor)
+			.withEditors(editor, editor2)
 			.build();
 
 	Document rejectedDocument = document()
@@ -29,7 +30,7 @@ public class DocumentTest {
 
 	Document draftDocument = document()
 			.authoredBy(author)
-			.withEditor(editor)
+			.withEditors(editor, editor2)
 			.build();
 
 	@Test
@@ -89,10 +90,25 @@ public class DocumentTest {
 	}
 
 	@Test
-	public void editorMayAcceptSubmitedDocument() {
+	public void documentIsAcceptedWhenAllEditorsAcceptIt() {
 		submitedDocument.accept(editor);
+		submitedDocument.accept(editor2);
 
 		assertThat(submitedDocument).hasStatus(ACCEPTED);
+	}
+
+	@Test
+	public void documentIsNotAcceptedUntilAllEditorsAcceptIt() {
+		submitedDocument.accept(editor);
+
+		assertThat(submitedDocument).hasStatus(SUBMITED);
+	}
+
+	@Test
+	public void editorCantAcceptDocumentMoreThanOnce() {
+		submitedDocument.accept(editor);
+
+		assertThrows(IllegalStateException.class, () -> submitedDocument.accept(editor));
 	}
 
 	@Test
