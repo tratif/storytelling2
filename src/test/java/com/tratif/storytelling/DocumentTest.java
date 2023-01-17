@@ -12,24 +12,24 @@ import org.junit.jupiter.api.Test;
 
 public class DocumentTest {
 
-	Person homer = new Person("Homer Simpson");
-	Person bart = new Person("Bart Simpson");
-	Person peter = new Person("Peter Griffin");
+	Person author = new Person("Homer Simpson");
+	Person editor = new Person("Bart Simpson");
+	Person sbElse = new Person("Peter Griffin");
 
-	Document submitedDocumentAuthoredByHomerWithEditorBart = document()
+	Document submitedDocument = document()
 			.withStatus(SUBMITED)
-			.authoredBy(homer)
-			.withEditor(bart)
+			.authoredBy(author)
+			.withEditor(editor)
 			.build();
 
-	Document rejectedDocumentAuthoredByHomer = document()
-			.authoredBy(homer)
+	Document rejectedDocument = document()
+			.authoredBy(author)
 			.withStatus(REJECTED)
 			.build();
 
-	Document draftDocumentAuthoredByHomerWithEditorBart = document()
-			.authoredBy(homer)
-			.withEditor(bart)
+	Document draftDocument = document()
+			.authoredBy(author)
+			.withEditor(editor)
 			.build();
 
 	@Test
@@ -40,69 +40,69 @@ public class DocumentTest {
 
 	@Test
 	public void authorCanAmendContentOfADraft() {
-		draftDocumentAuthoredByHomerWithEditorBart.amend("new content", homer);
+		draftDocument.amend("new content", author);
 
-		assertThat(draftDocumentAuthoredByHomerWithEditorBart).hasContent("new content");
+		assertThat(draftDocument).hasContent("new content");
 	}
 
 	@Test
 	public void authorCanAmendTheContentOfADraftWithoutCreatingNewRevision() {
-		draftDocumentAuthoredByHomerWithEditorBart.amend("new content", homer);
+		draftDocument.amend("new content", author);
 
-		assertThat(draftDocumentAuthoredByHomerWithEditorBart).hasRevisionNumber(1);
+		assertThat(draftDocument).hasRevisionNumber(1);
 	}
 
 	@Test
 	public void documentCanBeAmendedOnlyByAuthor() {
-		assertThrows(IllegalArgumentException.class, () -> draftDocumentAuthoredByHomerWithEditorBart.amend("new content", bart));
+		assertThrows(IllegalArgumentException.class, () -> draftDocument.amend("new content", editor));
 	}
 
 	@Test
 	public void newRevisionIsCreatedWhenAuthorEditsARejectedDocument() {
-		rejectedDocumentAuthoredByHomer.amend("new content", homer);
+		rejectedDocument.amend("new content", author);
 
-		assertThat(rejectedDocumentAuthoredByHomer).hasRevisionNumber(2);
+		assertThat(rejectedDocument).hasRevisionNumber(2);
 	}
 
 	@Test
 	public void authorCanAmendContentOfARejectedDocument() {
-		rejectedDocumentAuthoredByHomer.amend("new content", homer);
+		rejectedDocument.amend("new content", author);
 
-		assertThat(rejectedDocumentAuthoredByHomer).hasContent("new content");
+		assertThat(rejectedDocument).hasContent("new content");
 	}
 
 	@Test
 	public void editorMayRejectSubmitedDocument() {
-		submitedDocumentAuthoredByHomerWithEditorBart.reject(bart);
+		submitedDocument.reject(editor);
 
-		assertThat(submitedDocumentAuthoredByHomerWithEditorBart).hasStatus(REJECTED);
+		assertThat(submitedDocument).hasStatus(REJECTED);
 	}
 
 	@Test
 	public void editorCantRejectDocumentThatHasNotBeenSubmited() {
-		assertThrows(IllegalStateException.class, () -> draftDocumentAuthoredByHomerWithEditorBart.reject(bart));
+		assertThrows(IllegalStateException.class, () -> draftDocument.reject(editor));
 	}
 
 	@Test
 	public void onlyEditorsMayRejectDocument() {
-		assertThrows(IllegalArgumentException.class, () -> submitedDocumentAuthoredByHomerWithEditorBart.reject(peter));
+		assertThrows(IllegalArgumentException.class, () -> submitedDocument.reject(sbElse));
 	}
 
 	@Test
 	public void editorMayAcceptSubmitedDocument() {
-		submitedDocumentAuthoredByHomerWithEditorBart.accept(bart);
+		submitedDocument.accept(editor);
 
-		assertThat(submitedDocumentAuthoredByHomerWithEditorBart).hasStatus(ACCEPTED);
+		assertThat(submitedDocument).hasStatus(ACCEPTED);
 	}
 
 	@Test
 	public void onlyEditorMayAcceptDocument() {
-		assertThrows(IllegalArgumentException.class, () -> submitedDocumentAuthoredByHomerWithEditorBart.accept(peter));
+		assertThrows(IllegalArgumentException.class, () -> submitedDocument.accept(sbElse));
 	}
 
 	@Test
 	public void editorCantAcceptDocumentThatHasNotBeenSubmited() {
-		assertThrows(IllegalStateException.class, () -> draftDocumentAuthoredByHomerWithEditorBart.accept(bart));
+		assertThrows(IllegalStateException.class, () -> draftDocument.accept(editor));
 	}
 
 }
