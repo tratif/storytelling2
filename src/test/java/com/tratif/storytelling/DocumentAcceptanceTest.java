@@ -14,40 +14,53 @@ public class DocumentAcceptanceTest {
 	Person editor2 = new Person("Marge Simpson");
 	Person sbElse = new Person("Peter Griffin");
 
-	Document submitedDocument = document()
-			.withStatus(SUBMITED)
-			.withEditors(editor, editor2)
-			.build();
-
 	Document draftDocument = document()
 			.withEditors(editor, editor2)
 			.build();
 
 	@Test
 	void documentIsAcceptedWhenAllEditorsAcceptIt() {
-		submitedDocument.accept(editor);
-		submitedDocument.accept(editor2);
+		Document document = document()
+				.withStatus(SUBMITED)
+				.withEditors(editor, editor2)
+				.build();
+		
+		document.accept(editor);
+		document.accept(editor2);
 
-		assertThat(submitedDocument).hasStatus(ACCEPTED);
+		assertThat(document).hasStatus(ACCEPTED);
 	}
 
 	@Test
 	void documentIsNotAcceptedUntilAllEditorsAcceptIt() {
-		submitedDocument.accept(editor);
+		Document document = document()
+				.withStatus(SUBMITED)
+				.withEditors(editor, editor2)
+				.build();
+		
+		document.accept(editor);
 
-		assertThat(submitedDocument).hasStatus(SUBMITED);
+		assertThat(document).hasStatus(SUBMITED);
 	}
 
 	@Test
 	void editorCantAcceptDocumentMoreThanOnce() {
-		submitedDocument.accept(editor);
+		Document document = document()
+				.withStatus(SUBMITED)
+				.withEditors(editor, editor2)
+				.build();
 
-		assertThrows(IllegalStateException.class, () -> submitedDocument.accept(editor));
+		assertThrows(IllegalStateException.class, () -> document.accept(editor));
 	}
 
 	@Test
 	void onlyEditorMayAcceptDocument() {
-		assertThrows(IllegalArgumentException.class, () -> submitedDocument.accept(sbElse));
+		Document document = document()
+				.withStatus(SUBMITED)
+				.withEditors(editor, editor2)
+				.build();
+		
+		assertThrows(IllegalArgumentException.class, () -> document.accept(sbElse));
 	}
 
 	@Test
