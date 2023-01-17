@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 public class DocumentAmendingTest {
 
 	Person author = new Person("Homer Simpson");
-	Person editor = new Person("Bart Simpson");
-	Person editor2 = new Person("Marge Simpson");
 	Person sbElse = new Person("Peter Griffin");
 
 	Document rejectedDocument = document()
@@ -21,7 +19,6 @@ public class DocumentAmendingTest {
 
 	Document draftDocument = document()
 			.authoredBy(author)
-			.withEditors(editor, editor2)
 			.build();
 
 	@Test
@@ -40,7 +37,7 @@ public class DocumentAmendingTest {
 
 	@Test
 	void documentCanBeAmendedOnlyByAuthor() {
-		assertThrows(IllegalArgumentException.class, () -> draftDocument.amend("new content", editor));
+		assertThrows(IllegalArgumentException.class, () -> draftDocument.amend("new content", sbElse));
 	}
 
 	@Test

@@ -10,20 +10,16 @@ import org.junit.jupiter.api.Test;
 
 public class DocumentRejectionTest {
 
-	Person author = new Person("Homer Simpson");
 	Person editor = new Person("Bart Simpson");
-	Person editor2 = new Person("Marge Simpson");
 	Person sbElse = new Person("Peter Griffin");
 
 	Document submitedDocument = document()
 			.withStatus(SUBMITED)
-			.authoredBy(author)
-			.withEditors(editor, editor2)
+			.withEditors(editor, editor)
 			.build();
 
 	Document draftDocument = document()
-			.authoredBy(author)
-			.withEditors(editor, editor2)
+			.withEditors(editor, editor)
 			.build();
 
 	@Test
